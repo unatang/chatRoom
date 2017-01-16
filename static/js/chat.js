@@ -1,15 +1,13 @@
 /**
  * Created by lyon on 2017/1/13.
  */
-$(function () {
-    timestamp = 0;                                            /* 时间戳 */
+$(function () {        
     updateMsg();                                              /* 调用更新信息函数 */
     $("#chatform").submit(function () {                      /* URL 要用双引号 */
         $.post("chat.html",{
             message: $("#msg").val(),                         /*  逗号 */
             name: $("#author").val(),
-            action: "postmsg",
-            time: timestamp
+            date: new Date()                                 /* 时间戳 */
         }, function () {
             $("#msg").val("");
             addMessages();
@@ -19,13 +17,13 @@ $(function () {
 });
 /*  更新信息函数，每隔一定时间去服务器读取数据  */
 function updateMsg() {
-    $.post("chat.html", {
-        time: timestamp
+    $.post("update.html", {
+        message_id: timestamp
     }, function (json) {
         $("#loading").remove();
         addMessages(json);
     });
-    setTimeout("updateMsg()", 4000);                           /* 每隔4秒，读取一次 */
+    setTimeout("updateMsg()", 400);                           /* 每隔4秒，读取一次 */
 }
 /* 解析json文档函数， 将数据显示到页面上 */
 function addMessages(json) {
